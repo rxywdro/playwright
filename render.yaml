@@ -1,0 +1,11 @@
+# Render Blueprint for the song-license-tracker demo app (song-license-tracker/).
+# This is unrelated to the Playwright project itself — see song-license-tracker/README.md.
+# Deploy: https://dashboard.render.com/blueprints -> connect this repo -> Apply.
+services:
+  - type: web
+    name: song-license-tracker
+    runtime: node
+    rootDir: song-license-tracker/server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    plan: free
