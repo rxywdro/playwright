@@ -44,3 +44,21 @@ licensing deal with a licensor and start/end date.
 - `POST /api/songs` `{ title, artist, genre? }`
 - `POST /api/songs/:id/contracts` `{ licensor, startDate, endDate, notes? }`
 - `GET /api/stats`
+
+## Deploying (so it has a public URL, e.g. to view on your phone)
+
+The backend serves the built frontend itself, so the whole app is one
+deployable web service — no separate frontend host needed.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/rxywdro/playwright)
+
+1. Click the button above (or go to the [Render dashboard](https://dashboard.render.com/blueprints) → New Blueprint Instance).
+2. Connect your GitHub account and pick this repo/fork.
+3. Render reads `render.yaml` at the repo root, which points at `song-license-tracker/server`,
+   runs `npm run build` (builds the client and copies it into the server), then `npm start`.
+4. Free plan, no credit card required. First deploy takes a couple of minutes.
+5. Once live you'll get a URL like `https://song-license-tracker.onrender.com` you can open on any device.
+
+Note: the free plan's filesystem is ephemeral, so data resets on each redeploy/restart
+(the server auto-seeds sample data on startup if the database is empty) — fine for a demo,
+but swap in a persistent database before relying on it for real data.

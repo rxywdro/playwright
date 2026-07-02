@@ -1,7 +1,17 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { db } from './db.js';
 import { computeSongStatus, todayISO } from './status.js';
+import { seedDatabase } from './seedData.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const { count: songCount } = db.prepare('SELECT COUNT(*) AS count FROM songs').get();
+if (songCount === 0)
+  seedDatabase(db);
 
 const app = express();
 app.use(cors());
@@ -79,6 +89,14 @@ app.get('/api/stats', (req, res) => {
     stats[s.status]++;
   res.json(stats);
 });
+
+const publicDir = path.join(__dirname, '..', 'public');
+if (fs.existsSync(publicDir)) {
+  app.use(express.static(publicDir));
+  app.get(/^(?!\/api).*/, (req, res) => {
+    res.sendFile(path.join(publicDir, 'index.html'));
+  });
+}
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
